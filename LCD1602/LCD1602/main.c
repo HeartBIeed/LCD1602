@@ -14,8 +14,8 @@ int iniport(void)
 	DDRB=0xFF; // выход
 	DDRD=0xFF; 
 	
-	PORTB=0b11100000;// установка пинов
-	PORTD=0b11110100; 
+	PORTB=0b00000111;// установка пинов
+	PORTD=0b00001111; 
 
  
 
@@ -25,6 +25,7 @@ void LCD_ini(void)
 {
 _delay_ms(15);
 sendbyte(0b00000011);  // 11 включает 4 битный режим
+_delay_us(40);
 sendbyte(0b00000011);
 _delay_us(100);
 sendbyte(0b00000011);
@@ -53,8 +54,8 @@ void sendbyte(unsigned char c) // отправка байта
 	E1;
 		_delay_ms(50);
 		
-	PORTD &= 0x00; // отчистка Д порта
-	PORTD = c;
+	PORTD &= 0b11010000; // отчистка Д порта
+	PORTD  |= c;
 	
 	E0;	
 		_delay_ms(50);
@@ -73,14 +74,18 @@ void send(unsigned char c,unsigned char mode)
 	unsigned char hc=0;
 	hc = c >> 4;
 
-sendbyte(c); // мл полубайт
-sendbyte(hc);	// ст полубайт
+sendbyte(hc); // мл полубайт
+sendbyte(c);	// ст полубайт
 	
 	
 }
 
+void sendchar(unsigned char c)
 
+{
 
+	send(c,1);
+}
 
 
 
@@ -93,7 +98,9 @@ int main(void)
 		
 	 iniport();
 	 LCD_ini();
-	 
+	 sendchar("n");
+
+
 	 
 	 
     }
