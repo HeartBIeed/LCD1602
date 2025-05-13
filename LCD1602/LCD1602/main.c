@@ -3,10 +3,12 @@
 #include <avr/interrupt.h>
 #include <util/delay.h>
 
-#define E1 PORTB|=0b00100000 // установка линии E в 1 стробирующая шина
-#define E0 PORTB&=0b11011111 // установка линии E в 0
-#define RS1 PORTB|=0b10000000 // установка линии RS в 1 (данные)
-#define RS0 PORTB&=0b01111111 // установка линии RS в 0 (команда)
+
+
+#define E1 PORTB|=0b00000100 // установка линии E в 1 стробирующая шина
+#define E0 PORTB&=0b11111011 // установка линии E в 0
+#define RS1 PORTB|=0b00000001 // установка линии RS в 1 (данные)
+#define RS0 PORTB&=0b11111110 // установка линии RS в 0 (команда)
 
 int iniport(void)
 {
@@ -15,7 +17,7 @@ int iniport(void)
 	DDRD=0xFF; 
 	
 	PORTB=0b00000111;// установка пинов
-	PORTD=0b00001111; 
+	PORTD=0b00101111; 
 
  
 
@@ -25,10 +27,12 @@ void LCD_ini(void)
 {
 _delay_ms(15);
 sendbyte(0b00000011);  // 11 включает 4 битный режим
-_delay_us(40);
+_delay_ms(5);
 sendbyte(0b00000011);
-_delay_us(100);
+_delay_us(200);
 sendbyte(0b00000011);
+_delay_ms(1);
+sendbyte(0b00000010);
 _delay_ms(1);
 sendbyte(0b00000010);
 _delay_ms(1);
@@ -50,15 +54,15 @@ _delay_ms(1);
 
 void sendbyte(unsigned char c) // отправка байта
 {
-		_delay_ms(15);		
+	
 	E1;
-		_delay_ms(50);
+		_delay_us(50);
 		
-	PORTD &= 0b11010000; // отчистка Д порта
+	PORTD &= 0b11110000; // отчистка Д порта
 	PORTD  |= c;
 	
 	E0;	
-		_delay_ms(50);
+		_delay_us(50);
 		
 	}
 
@@ -81,7 +85,6 @@ sendbyte(c);	// ст полубайт
 }
 
 void sendchar(unsigned char c)
-
 {
 
 	send(c,1);
