@@ -10,7 +10,11 @@
 #define RS1 PORTB|=0b00000001 // установка линии RS в 1 (данные)
 #define RS0 PORTB&=0b11111110 // установка линии RS в 0 (команда)
 
-int iniport(void)
+void send(unsigned char c,unsigned char mode);
+void sendbyte(unsigned char c);
+
+
+void iniport(void)
 {
 	
 	DDRB=0xFF; // выход
@@ -29,25 +33,26 @@ _delay_ms(15);
 sendbyte(0b00000011);  // 11 включает 4 битный режим
 _delay_ms(5);
 sendbyte(0b00000011);
-_delay_us(200);
+_delay_us(100);
 sendbyte(0b00000011);
 _delay_ms(1);
 sendbyte(0b00000010);
 _delay_ms(1);
 sendbyte(0b00000010);
-_delay_ms(1);
+
+_delay_us(40);
 
 	send(0b00101000, 0); // отправка команд
 
-_delay_ms(1);
+_delay_us(40);
 
 	send(0b00001100, 0);
 	
-_delay_ms(1);
+_delay_us(40);
 
 	send(0b00000110, 0);
 	
-_delay_ms(1);
+_delay_us(40);
 
 
 }
@@ -78,8 +83,8 @@ void send(unsigned char c,unsigned char mode)
 	unsigned char hc=0;
 	hc = c >> 4;
 
-sendbyte(hc); // мл полубайт
-sendbyte(c);	// ст полубайт
+sendbyte(hc); // ct полубайт
+sendbyte(c);	// ml полубайт
 	
 	
 }
@@ -90,7 +95,17 @@ void sendchar(unsigned char c)
 	send(c,1);
 }
 
+void setpos(unsigned char x, unsigned y)
 
+{
+
+	char adress;
+
+	adress=(0x40*y+x)|0b10000000;
+
+	send(adress, 0);
+
+}
 
 int main(void)
 {
@@ -101,7 +116,14 @@ int main(void)
 		
 	 iniport();
 	 LCD_ini();
-	 sendchar("n");
+	 
+	 setpos(0,0);
+
+	 sendchar('D');
+	 sendchar('I');
+	 sendchar('M');
+	 sendchar('A');
+
 
 
 	 
