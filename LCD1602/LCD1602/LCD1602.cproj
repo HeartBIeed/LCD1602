@@ -128,12 +128,22 @@
     </ToolchainSettings>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="main.c">
+    <Compile Include="Header\lcd1602.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Header\main.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Source\lcd1602.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Source\main.c">
       <SubType>compile</SubType>
     </Compile>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Header" />
+    <Folder Include="Source" />
   </ItemGroup>
   <Import Project="$(AVRSTUDIO_EXE_PATH)\\Vs\\Compiler.targets" />
 </Project>
